@@ -29,13 +29,27 @@ fs.readFile("bd.json", "utf8", (err, data) => {
     let i = 0,
     ln = notes.length;
     for (i; i < ln; i++) {
-      notes[i].uniqueId = i + 1;
+      notes[i].id = i + 1;
     }
 
     //-------------\\
     updateNotes();
     return console.log("Added new note: " + newNote.title);
   });
+
+  //------------------------------------------------\\
+  //delete
+  app.delete("/api/notes/:id", function (req, res){
+    console.log(req.params.id)
+    const { id } = req.params;
+    const deleted = notes.find(note => note.id === id);
+
+    if(deleted){
+      notes.filter(note => note.id !== id)
+    }
+  })
+
+  //-----------------------------------------------\\
 
   app.get("/", function (req, res) {
     res.sendFile(path.join(__dirname, "index.html"));
