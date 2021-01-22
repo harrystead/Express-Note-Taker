@@ -3,7 +3,8 @@ const path = require("path");
 const fs = require("fs");
 
 const app = express();
-app.use("/client", express.static(__dirname + "/client"));
+// app.use("/client", express.static(__dirname + "/client"));
+app.use(express.static(__dirname));
 
 const port = process.env.PORT || 3000;
 app.use(express.urlencoded({ extended: true }));
@@ -17,7 +18,6 @@ fs.readFile("bd.json", "utf8", (err, data) => {
   var notes = JSON.parse(data);
 
   app.get("/api/notes", function (req, res) {
-    // Read the db.json file and return all saved notes as JSON.
     res.json(notes);
   });
 
@@ -25,16 +25,8 @@ fs.readFile("bd.json", "utf8", (err, data) => {
     let newNote = req.body;
     notes.push(newNote);
     updateNotes();
+    return console.log("Added new note: "+newNote.title);
   });
-
-
-  function updateNotes() {
-    fs.writeFile("bd.json", JSON.stringify(notes, null, 2), "utf8", (err) => {
-      if (err) {
-        return console.log(err);
-      }
-    });
-  }
 
   app.get("/", function (req, res) {
     res.sendFile(path.join(__dirname, "index.html"));
@@ -43,6 +35,18 @@ fs.readFile("bd.json", "utf8", (err, data) => {
   app.get("/notes", function (req, res) {
     res.sendFile(path.join(__dirname, "notes.html"));
   });
+
+  function updateNotes() {
+    fs.writeFile("bd.json", JSON.stringify(notes, null, 2), "utf8", (err) => {
+      if (err) {
+        return console.log(err);
+      }
+      else{
+        return true;
+      }
+    });
+  }
+
 });
 
 
