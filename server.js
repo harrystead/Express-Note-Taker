@@ -24,8 +24,17 @@ fs.readFile("bd.json", "utf8", (err, data) => {
   app.post("/api/notes", function (req, res) {
     let newNote = req.body;
     notes.push(newNote);
+
+    //add id to notes.
+    let i = 0,
+    ln = notes.length;
+    for (i; i < ln; i++) {
+      notes[i].uniqueId = i + 1;
+    }
+
+    //-------------\\
     updateNotes();
-    return console.log("Added new note: "+newNote.title);
+    return console.log("Added new note: " + newNote.title);
   });
 
   app.get("/", function (req, res) {
@@ -40,29 +49,12 @@ fs.readFile("bd.json", "utf8", (err, data) => {
     fs.writeFile("bd.json", JSON.stringify(notes, null, 2), "utf8", (err) => {
       if (err) {
         return console.log(err);
-      }
-      else{
+      } else {
         return true;
       }
     });
   }
-
 });
-
-
-//------------------------------------------------\\
-
-// app.delete("/api/notes/:id", function (req, res) {
-//     readFile((data) => {
-//       // add the new user
-//       const userId = req.params["id"];
-//       delete data[userId];
-
-//       writeFile(JSON.stringify(data, null, 2), () => {
-//         res.status(200).send(`users id:${userId} removed`);
-//       });
-//     }, true);
-//   });
 
 //-------------------------------------------------\\
 
